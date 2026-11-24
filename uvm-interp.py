@@ -1,4 +1,4 @@
-"""Interpreter for UVM variant 20, stage 3."""
+"""Interpreter for UVM variant 20, stage 4."""
 
 import sys
 import xml.etree.ElementTree as ET
@@ -29,6 +29,8 @@ def read_cmd(bytecode, pc):
         val |= (bytecode[pc + 2] << 16)
         val |= (bytecode[pc + 3] << 24)
         return op, (val >> 5) & mask(24), 4
+    if op == 31:
+        return op, 0, 1
     return 0, 0, 1
 
 
@@ -53,6 +55,8 @@ def execute(bytecode):
             reg = mem[reg + arg]
         if op == 17:
             mem[arg] = reg
+        if op == 31:
+            reg = -reg
         pc += size
 
 
